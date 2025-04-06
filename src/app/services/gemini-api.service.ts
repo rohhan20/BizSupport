@@ -76,7 +76,13 @@ export class GeminiApiService {
               
               USER QUERY: ${message}
               
-              Please respond concisely but thoroughly to the user's question above, specifically focusing on how the policy changes affect their business. Use a professional tone suitable for business advice.`
+              Please respond concisely but thoroughly to the user's question above, specifically focusing on how the policy changes affect their business. Use a professional tone suitable for business advice. Format your response using Markdown where appropriate, including:
+              
+              1. Use **bold** for important points 
+              2. Use bullet points for lists
+              3. Include links to relevant resources where possible
+              4. When citing sources, place them at the end of your response in a separate "Sources" section
+              `
             }
           ]
         }

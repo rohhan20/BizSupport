@@ -7,7 +7,7 @@
   padding: 20px;
 }
 
-/* Styles for non-authenticated landing page */
+/* ---------- Non-authenticated Landing Page ---------- */
 .hero-section {
   display: flex;
   align-items: center;
@@ -55,6 +55,7 @@
   height: auto;
 }
 
+/* Features Section */
 .features-section, .testimonials-section {
   margin: 60px 0;
 }
@@ -72,27 +73,25 @@
   gap: 30px;
 }
 
-mat-card {
+.feature-cards mat-card {
   height: 100%;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s ease;
 }
 
-mat-card:hover {
+.feature-cards mat-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
-mat-card-header {
-  display: flex;
-  align-items: center;
+.feature-cards mat-card-header {
   margin-bottom: 15px;
 }
 
-mat-icon {
-  margin-right: 10px;
+.feature-cards mat-icon {
   color: #3f51b5;
 }
 
+/* Testimonials Section */
 .testimonial-cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
@@ -106,7 +105,7 @@ mat-icon {
   font-weight: 500;
 }
 
-/* Styles for authenticated dashboard */
+/* ---------- Authenticated Dashboard ---------- */
 .dashboard-header {
   text-align: center;
   margin-bottom: 40px;
@@ -151,18 +150,50 @@ mat-icon {
   font-size: 0.9rem;
 }
 
+/* Recommendations Styling */
+.recommendations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
 .recommendation-card {
-  margin-bottom: 20px;
+  margin-bottom: 0;
   cursor: pointer;
+  border-left: 4px solid #3f51b5;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.recommendation-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.recommendation-card mat-card-header {
+  padding-bottom: 10px;
+}
+
+.recommendation-card mat-card-title {
+  color: #3f51b5;
+  font-weight: 500;
+}
+
+.recommendation-card mat-card-subtitle {
+  color: #f44336;
 }
 
 .impact-label {
+  display: inline-block;
+  background-color: #e8eaf6;
+  padding: 3px 10px;
+  border-radius: 4px;
   margin-top: 10px;
   font-weight: 500;
   font-size: 0.9rem;
-  color: #616161;
+  color: #3f51b5;
 }
 
+/* Alerts Timeline Styling */
 .alerts-timeline {
   display: flex;
   flex-direction: column;
@@ -174,12 +205,8 @@ mat-icon {
   position: relative;
 }
 
-.alert-read .alert-content mat-card {
-  opacity: 0.7;
-}
-
 .alert-time {
-  width: 70px;
+  width: 60px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -187,23 +214,10 @@ mat-icon {
 }
 
 .time-dot {
-  width: 16px;
-  height: 16px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   margin-bottom: 8px;
-  border: 2px solid #fff;
-}
-
-.severity-high {
-  background-color: #f44336;
-}
-
-.severity-medium {
-  background-color: #ff9800;
-}
-
-.severity-low {
-  background-color: #4caf50;
 }
 
 .time-text {
@@ -220,6 +234,12 @@ mat-icon {
   cursor: pointer;
   position: relative;
   overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.alert-content mat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .alert-severity-indicator {
@@ -228,6 +248,23 @@ mat-icon {
   left: 0;
   height: 100%;
   width: 4px;
+}
+
+.alert-read .alert-content mat-card {
+  opacity: 0.7;
+}
+
+/* Severity colors */
+.severity-high {
+  background-color: #f44336;
+}
+
+.severity-medium {
+  background-color: #ff9800;
+}
+
+.severity-low {
+  background-color: #4caf50;
 }
 
 /* Responsive design */
@@ -257,5 +294,15 @@ mat-icon {
   
   .feature-cards, .testimonial-cards {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .alert-time {
+    width: 40px;
+  }
+  
+  .time-text {
+    font-size: 0.7rem;
   }
 }

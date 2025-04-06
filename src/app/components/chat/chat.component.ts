@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, NavigationStart } from '@angular/router';
 import { ChatService } from '../../services/chat.service';
 import { Message } from '../../models/message.model';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-chat',
@@ -17,14 +18,24 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   chatForm: FormGroup;
   policyContext: any = null;
   isLoadingResponse = false;
-
+  private shouldScrollToBottom = true;
+  
   constructor(
     private chatService: ChatService,
     private formBuilder: FormBuilder,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router,
+    private location: Location
   ) {
     this.chatForm = this.formBuilder.group({
       message: ['', Validators.required]
+    });
+    
+    // Reset scroll flag when navigating away to prevent scroll jumps when returning
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart) {
+        this.shouldScrollToBottom = false;
+      }
     });
   }
 
@@ -34,8 +45,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
       if (params['contextData']) {
         try {
           this.policyContext = JSON.parse(params['contextData']);
-          // Add initial context message based on the alert/recommendation
-          this.addContextMessage();
+          // No need to add initial context message - now displayed in the UI
         } catch (e) {
           console.error('Error parsing context data', e);
         }
@@ -46,7 +56,9 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   }
 
   ngAfterViewChecked() {
-    this.scrollToBottom();
+    if (this.shouldScrollToBottom) {
+      this.scrollToBottom();
+    }
   }
 
   addContextMessage(): void {
@@ -76,6 +88,8 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   loadMessages(): void {
     this.chatService.getMessages().subscribe(messages => {
       this.messages = messages;
+      // Mark for scrolling after messages load
+      this.shouldScrollToBottom = true;
     });
   }
 
@@ -87,6 +101,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     const messageText = this.chatForm.get('message')?.value;
     this.chatForm.reset();
     this.isLoadingResponse = true;
+    this.shouldScrollToBottom = true;
     
     this.chatService.sendMessage(messageText, this.policyContext).subscribe({
       next: () => {
@@ -98,11 +113,15 @@ export class ChatComponent implements OnInit, AfterViewChecked {
       }
     });
   }
-  
+
   scrollToBottom(): void {
     try {
       this.messagesContainer.nativeElement.scrollTop = 
         this.messagesContainer.nativeElement.scrollHeight;
     } catch (err) { }
+  }
+  
+  goBack(): void {
+    this.location.back();
   }
 }

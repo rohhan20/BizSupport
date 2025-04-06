@@ -1,47 +1,95 @@
 <!-- src/app/components/chat/chat.component.html -->
+<div class="chat-overlay" (click)="goBack()"></div>
 <div class="chat-container">
   <div class="chat-header">
-    <h2>Policy Navigator Chat</h2>
-    <div *ngIf="policyContext" class="context-indicator">
-      <span class="context-type">{{ policyContext.type === 'alert' ? 'Policy Alert' : 'Recommendation' }}</span>
-      <span class="context-title">{{ policyContext.title }}</span>
+    <div class="header-left">
+      <button mat-icon-button class="back-button" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h2>Policy Navigator Chat</h2>
+    </div>
+    
+    <div *ngIf="policyContext" class="context-badge" 
+         [ngClass]="policyContext.type === 'alert' ? 'alert-badge-' + policyContext.severity : 'recommendation-badge'">
+      <mat-icon>{{ policyContext.type === 'alert' ? 'notification_important' : 'lightbulb' }}</mat-icon>
+      <div class="context-details">
+        <span class="context-type">{{ policyContext.type === 'alert' ? 'Policy Alert' : 'Recommendation' }}</span>
+        <span class="context-title">{{ policyContext.title }}</span>
+      </div>
     </div>
   </div>
   
-  <div class="messages-container">
-    <div *ngFor="let message of messages" 
-         [ngClass]="{
-           'message': true, 
-           'user-message': message.sender === 'user', 
-           'bot-message': message.sender === 'bot',
-           'context-message': message.isContextMessage
-         }">
-      <div class="message-content">
-        <p [innerHTML]="message.text | lineBreaks"></p>
+  <div class="content-wrapper">
+    <div #messagesContainer class="messages-container">
+      <div *ngIf="policyContext" class="context-message">
+        <div class="context-header">
+          <mat-icon>{{ policyContext.type === 'alert' ? 'warning' : 'tips_and_updates' }}</mat-icon>
+          <span>{{ policyContext.title }}</span>
+        </div>
+        <div [innerHTML]="policyContext.description | markdown"></div>
+        
+        <div *ngIf="policyContext.type === 'recommendation'" class="context-impact">
+          <strong>Impact:</strong> {{ policyContext.impact }}
+        </div>
+        
+        <div *ngIf="policyContext.deadline" class="context-deadline">
+          <mat-icon>event</mat-icon>
+          <span>Due by: {{ policyContext.deadline | date:'mediumDate' }}</span>
+        </div>
       </div>
-      <div class="message-timestamp">
-        {{ message.timestamp | date:'short' }}
+      
+      <div *ngFor="let message of messages" 
+           [ngClass]="{
+             'message': true, 
+             'user-message': message.sender === 'user', 
+             'bot-message': message.sender === 'bot',
+             'context-message': message.isContextMessage && !policyContext
+           }">
+        <div class="message-avatar" *ngIf="message.sender === 'bot'">
+          <mat-icon class="bot-icon">smart_toy</mat-icon>
+        </div>
+        <div class="message-bubble">
+          <div class="message-content">
+            <div [innerHTML]="message.text | markdown"></div>
+          </div>
+          <div class="message-timestamp">
+            {{ message.timestamp | date:'shortTime' }}
+          </div>
+        </div>
+        <div class="message-avatar user-avatar" *ngIf="message.sender === 'user'">
+          <mat-icon>person</mat-icon>
+        </div>
+      </div>
+      
+      <div *ngIf="isLoadingResponse" class="bot-message loading-message">
+        <div class="message-avatar">
+          <mat-icon class="bot-icon">smart_toy</mat-icon>
+        </div>
+        <div class="message-bubble">
+          <div class="loading-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
       </div>
     </div>
     
-    <div *ngIf="isLoadingResponse" class="bot-message loading-message">
-      <div class="loading-dots">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
+    <div class="chat-input">
+      <form [formGroup]="chatForm" (ngSubmit)="sendMessage()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Type your question about this policy</mat-label>
+          <input matInput formControlName="message" placeholder="Ask about specific requirements, deadlines, or impacts..." 
+                 (keydown.enter)="$event.preventDefault(); sendMessage()">
+          <button mat-icon-button matSuffix *ngIf="chatForm.get('message')?.value" 
+                  type="button" (click)="chatForm.get('message')?.reset()">
+            <mat-icon>clear</mat-icon>
+          </button>
+        </mat-form-field>
+        <button mat-fab color="primary" type="submit" [disabled]="chatForm.invalid || isLoadingResponse">
+          <mat-icon>send</mat-icon>
+        </button>
+      </form>
     </div>
-  </div>
-  
-  <div class="chat-input">
-    <form [formGroup]="chatForm" (ngSubmit)="sendMessage()">
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Type your question about this policy</mat-label>
-        <input matInput formControlName="message" placeholder="Ask about specific requirements, deadlines, or impacts...">
-      </mat-form-field>
-      <button mat-raised-button color="primary" type="submit" [disabled]="chatForm.invalid || isLoadingResponse">
-        <mat-icon>send</mat-icon> Send
-      </button>
-    </form>
   </div>
 </div>

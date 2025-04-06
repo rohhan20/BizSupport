@@ -49,7 +49,7 @@ export class ChatService {
           const botResponse = response.candidates[0].content.parts[0].text;
           
           const botMessage: Message = {
-            text: botResponse,
+            text: this.processResponseForMarkdown(botResponse),
             sender: 'bot',
             timestamp: new Date()
           };
@@ -74,6 +74,24 @@ export class ChatService {
         return of(userMessage);
       })
     );
+  }
+
+  private processResponseForMarkdown(response: string): string {
+    // Look for URLs and convert them to markdown links if they're not already 
+    const urlRegex = /(?<![\[\(])(https?:\/\/[^\s]+)(?![\]\)])/g;
+    response = response.replace(urlRegex, '[$1]($1)');
+    
+    // If there are sources, format them nicely
+    if (response.toLowerCase().includes('source') || response.toLowerCase().includes('reference')) {
+      // Simple heuristic to detect source sections - improve as needed
+      const parts = response.split(/sources:|references:/i);
+      if (parts.length > 1) {
+        // Format the sources section
+        return `${parts[0]}\n\n**Sources:**\n${parts[1].trim()}`;
+      }
+    }
+    
+    return response;
   }
 
   private generateFallbackResponse(query: string, context?: any): string {

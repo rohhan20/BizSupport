@@ -35,7 +35,7 @@ export class LoginComponent {
     
     this.authService.login(email, password).subscribe({
       next: () => {
-        this.router.navigate(['/chat']);
+        this.router.navigate(['/home']);
       },
       error: (err) => {
         this.error = 'Login failed. Please check your credentials.';
