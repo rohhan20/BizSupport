@@ -38,6 +38,31 @@
           </mat-form-field>
         </div>
         
+        <h3>Business Details</h3>
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Business Type</mat-label>
+            <input matInput formControlName="businessType" placeholder="e.g., LLC, Sole Proprietorship">
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline">
+            <mat-label>Industry</mat-label>
+            <input matInput formControlName="industry" placeholder="e.g., Retail, Healthcare">
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Number of Employees</mat-label>
+            <input matInput formControlName="numberOfEmployees" type="number" placeholder="e.g., 5">
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline">
+            <mat-label>Annual Revenue</mat-label>
+            <input matInput formControlName="annualRevenue" placeholder="e.g., $100,000 - $500,000">
+          </mat-form-field>
+        </div>
+
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>LinkedIn Profile</mat-label>
           <input matInput formControlName="linkedInProfile" placeholder="LinkedIn profile URL">

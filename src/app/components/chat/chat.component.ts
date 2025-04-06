@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ChatService } from '../../services/chat.service';
@@ -10,7 +10,9 @@ import { Message } from '../../models/message.model';
   styleUrls: ['./chat.component.css'],
   standalone: false,
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, AfterViewChecked {
+  @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
+  
   messages: Message[] = [];
   chatForm: FormGroup;
   policyContext: any = null;
@@ -43,6 +45,10 @@ export class ChatComponent implements OnInit {
     this.loadMessages();
   }
 
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
+
   addContextMessage(): void {
     if (!this.policyContext) return;
     
@@ -70,8 +76,6 @@ export class ChatComponent implements OnInit {
   loadMessages(): void {
     this.chatService.getMessages().subscribe(messages => {
       this.messages = messages;
-      // Scroll to bottom of messages
-      setTimeout(() => this.scrollToBottom(), 100);
     });
   }
 
@@ -81,13 +85,12 @@ export class ChatComponent implements OnInit {
     }
 
     const messageText = this.chatForm.get('message')?.value;
+    this.chatForm.reset();
     this.isLoadingResponse = true;
     
     this.chatService.sendMessage(messageText, this.policyContext).subscribe({
       next: () => {
-        this.chatForm.reset();
         this.isLoadingResponse = false;
-        setTimeout(() => this.scrollToBottom(), 100);
       },
       error: (error) => {
         console.error('Error sending message', error);
@@ -97,9 +100,9 @@ export class ChatComponent implements OnInit {
   }
   
   scrollToBottom(): void {
-    const messagesContainer = document.querySelector('.messages-container');
-    if (messagesContainer) {
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
+    try {
+      this.messagesContainer.nativeElement.scrollTop = 
+        this.messagesContainer.nativeElement.scrollHeight;
+    } catch (err) { }
   }
 }

@@ -28,12 +28,17 @@ export class AuthService {
   }
 
   login(email: string, password: string): Observable<User> {
-    // This is a mock implementation. In a real app, you would call an API
-    // For MVP, we'll just simulate a successful login
+    // Mock a more complete user object for better context
     const mockUser: User = {
       id: '1',
       email: email,
-      businessName: 'Demo Business'
+      businessName: 'Demo Business',
+      businessType: 'Small LLC',
+      industry: 'Technology',
+      numberOfEmployees: 15,
+      annualRevenue: '$500,000 - $1,000,000',
+      phoneNumber: '555-123-4567',
+      businessRegId: 'BUS12345'
     };
     
     // Store user in localStorage if in browser

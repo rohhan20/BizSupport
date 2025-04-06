@@ -26,7 +26,11 @@ export class ProfileComponent implements OnInit {
       businessRegId: ['', Validators.required],
       linkedInProfile: [''],
       googleBusinessId: [''],
-      salesTaxCertificate: ['']
+      salesTaxCertificate: [''],
+      businessType: [''],
+      industry: [''],
+      numberOfEmployees: [''],
+      annualRevenue: ['']
     });
   }
 

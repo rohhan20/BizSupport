@@ -9,4 +9,8 @@ export interface User {
   googleBusinessId?: string;
   salesTaxCertificate?: string;
   createdAt?: Date;
+  businessType?: string;
+  industry?: string;
+  numberOfEmployees?: number;
+  annualRevenue?: string;
 }
