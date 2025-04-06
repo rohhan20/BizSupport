@@ -1,0 +1,32 @@
+<!-- src/app/components/login/login.component.html -->
+<div class="login-container">
+  <div class="login-card">
+    <h2>Login to Policy Navigator</h2>
+    
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" placeholder="Enter your email">
+        <mat-error *ngIf="loginForm.get('email')?.hasError('required')">Email is required</mat-error>
+        <mat-error *ngIf="loginForm.get('email')?.hasError('email')">Please enter a valid email</mat-error>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password" placeholder="Enter your password">
+        <mat-error *ngIf="loginForm.get('password')?.hasError('required')">Password is required</mat-error>
+        <mat-error *ngIf="loginForm.get('password')?.hasError('minlength')">Password must be at least 6 characters</mat-error>
+      </mat-form-field>
+      
+      <div *ngIf="error" class="error-message">{{ error }}</div>
+      
+      <button mat-raised-button color="primary" type="submit" [disabled]="loading" class="full-width">
+        {{ loading ? 'Logging in...' : 'Login' }}
+      </button>
+    </form>
+    
+    <div class="register-link">
+      <p>Don't have an account? <a routerLink="/auth/register">Register here</a></p>
+    </div>
+  </div>
+</div>

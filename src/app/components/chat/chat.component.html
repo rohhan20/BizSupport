@@ -1,0 +1,47 @@
+<!-- src/app/components/chat/chat.component.html -->
+<div class="chat-container">
+  <div class="chat-header">
+    <h2>Policy Navigator Chat</h2>
+    <div *ngIf="policyContext" class="context-indicator">
+      <span class="context-type">{{ policyContext.type === 'alert' ? 'Policy Alert' : 'Recommendation' }}</span>
+      <span class="context-title">{{ policyContext.title }}</span>
+    </div>
+  </div>
+  
+  <div class="messages-container">
+    <div *ngFor="let message of messages" 
+         [ngClass]="{
+           'message': true, 
+           'user-message': message.sender === 'user', 
+           'bot-message': message.sender === 'bot',
+           'context-message': message.isContextMessage
+         }">
+      <div class="message-content">
+        <p [innerHTML]="message.text | lineBreaks"></p>
+      </div>
+      <div class="message-timestamp">
+        {{ message.timestamp | date:'short' }}
+      </div>
+    </div>
+    
+    <div *ngIf="isLoadingResponse" class="bot-message loading-message">
+      <div class="loading-dots">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="chat-input">
+    <form [formGroup]="chatForm" (ngSubmit)="sendMessage()">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Type your question about this policy</mat-label>
+        <input matInput formControlName="message" placeholder="Ask about specific requirements, deadlines, or impacts...">
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit" [disabled]="chatForm.invalid || isLoadingResponse">
+        <mat-icon>send</mat-icon> Send
+      </button>
+    </form>
+  </div>
+</div>

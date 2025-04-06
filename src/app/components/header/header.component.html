@@ -1,0 +1,41 @@
+<!-- src/app/components/header/header.component.html -->
+<mat-toolbar color="primary" class="app-header">
+  <div class="header-container">
+    <div class="logo-section">
+      <a routerLink="/" class="logo">
+        <mat-icon>policy</mat-icon>
+        <span>Policy Navigator</span>
+      </a>
+    </div>
+    
+    <div class="nav-links">
+      <a mat-button routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">Home</a>
+      <ng-container *ngIf="!isLoggedIn">
+        <a mat-button routerLink="/auth/login" routerLinkActive="active-link">Login</a>
+        <a mat-button routerLink="/auth/register" routerLinkActive="active-link">Register</a>
+      </ng-container>
+      <ng-container *ngIf="isLoggedIn">
+        <a mat-button routerLink="/profile" routerLinkActive="active-link">Profile</a>
+        <button mat-button (click)="logout()">
+          <mat-icon>exit_to_app</mat-icon> Logout
+        </button>
+      </ng-container>
+    </div>
+    
+    <button mat-icon-button class="mobile-menu-toggle" (click)="toggleMobileMenu()">
+      <mat-icon>{{ isMobileMenuOpen ? 'close' : 'menu' }}</mat-icon>
+    </button>
+  </div>
+  
+  <div class="mobile-menu" [class.open]="isMobileMenuOpen">
+    <a mat-button routerLink="/" (click)="closeMobileMenu()">Home</a>
+    <ng-container *ngIf="!isLoggedIn">
+      <a mat-button routerLink="/auth/login" (click)="closeMobileMenu()">Login</a>
+      <a mat-button routerLink="/auth/register" (click)="closeMobileMenu()">Register</a>
+    </ng-container>
+    <ng-container *ngIf="isLoggedIn">
+      <a mat-button routerLink="/profile" (click)="closeMobileMenu()">Profile</a>
+      <button mat-button (click)="logout(); closeMobileMenu()">Logout</button>
+    </ng-container>
+  </div>
+</mat-toolbar>

@@ -1,0 +1,148 @@
+<!-- src/app/components/home/home.component.html -->
+
+<!-- Landing page view for non-authenticated users -->
+<div class="home-container" *ngIf="!isLoggedIn">
+  <div class="hero-section">
+    <div class="hero-content">
+      <h1>Welcome to Policy Navigator</h1>
+      <p>Your AI assistant for navigating business policies and regulations</p>
+      <p class="hero-description">
+        Stay compliant with changing regulations, get real-time alerts about policy changes 
+        affecting your business, and receive personalized recommendations tailored to your 
+        industry and company size.
+      </p>
+      <div class="cta-buttons">
+        <a mat-raised-button color="primary" routerLink="/auth/register">Get Started</a>
+        <a mat-stroked-button routerLink="/auth/login">Login</a>
+      </div>
+    </div>
+    <div class="hero-image">
+      <img src="assets/policy-navigator.svg" alt="Policy Navigator Illustration">
+    </div>
+  </div>
+
+  <div class="features-section">
+    <h2>How Policy Navigator Helps Your Business</h2>
+    
+    <div class="feature-cards">
+      <mat-card>
+        <mat-card-header>
+          <mat-icon>notifications_active</mat-icon>
+          <mat-card-title>Real-time Alerts</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Receive timely notifications about policy changes that affect your business operations.</p>
+        </mat-card-content>
+      </mat-card>
+      
+      <mat-card>
+        <mat-card-header>
+          <mat-icon>question_answer</mat-icon>
+          <mat-card-title>Policy Q&A</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Get instant answers to your policy and regulation questions with our AI assistant.</p>
+        </mat-card-content>
+      </mat-card>
+      
+      <mat-card>
+        <mat-card-header>
+          <mat-icon>recommendation</mat-icon>
+          <mat-card-title>Smart Recommendations</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Receive customized recommendations to help you stay compliant with changing regulations.</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="testimonials-section">
+    <h2>Trusted by Businesses Nationwide</h2>
+    
+    <div class="testimonial-cards">
+      <mat-card>
+        <mat-card-content>
+          <p>"Policy Navigator has saved us countless hours of research and helped us avoid compliance issues."</p>
+          <p class="testimonial-author">- Sarah J., Small Business Owner</p>
+        </mat-card-content>
+      </mat-card>
+      
+      <mat-card>
+        <mat-card-content>
+          <p>"The real-time alerts and personalized recommendations have been invaluable for our regulatory strategy."</p>
+          <p class="testimonial-author">- Michael T., Compliance Officer</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+<!-- Dashboard view for authenticated users -->
+<div class="dashboard-container" *ngIf="isLoggedIn">
+  <div class="dashboard-header">
+    <h1>Your Policy Dashboard</h1>
+    <p>Stay updated with the latest policy changes affecting your business</p>
+  </div>
+  
+  <div class="dashboard-content">
+    <div class="dashboard-column recommendations-column">
+      <div class="section-header">
+        <h2>Priority Recommendations</h2>
+        <p>Actions needed based on recent policy changes</p>
+      </div>
+      
+      <div class="recommendations-list">
+        <mat-card *ngFor="let rec of policyRecommendations" class="recommendation-card">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>assignment</mat-icon>
+            <mat-card-title>{{ rec.title }}</mat-card-title>
+            <mat-card-subtitle *ngIf="rec.deadline">
+              Due by: {{ rec.deadline | date:'mediumDate' }}
+            </mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <p>{{ rec.description }}</p>
+            <div class="impact-label">Impact: {{ rec.impact }}</div>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button color="primary" (click)="navigateToChat(rec.id)">LEARN MORE</button>
+            <button mat-button>MARK AS DONE</button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+    
+    <div class="dashboard-column alerts-column">
+      <div class="section-header">
+        <h2>Recent Policy Alerts</h2>
+        <p>Timeline of regulatory updates affecting your business</p>
+      </div>
+      
+      <div class="alerts-timeline">
+        <div *ngFor="let alert of policyAlerts" class="alert-item" 
+             [ngClass]="{'alert-read': alert.read}">
+          <div class="alert-time">
+            <div class="time-dot" [ngClass]="getSeverityClass(alert.severity)"></div>
+            <div class="time-text">{{ getTimeAgo(alert.date) }}</div>
+          </div>
+          <div class="alert-content">
+            <mat-card (click)="navigateToChat(alert.id)">
+              <div class="alert-severity-indicator" [ngClass]="getSeverityClass(alert.severity)"></div>
+              <mat-card-header>
+                <mat-card-title>{{ alert.title }}</mat-card-title>
+                <mat-card-subtitle>{{ alert.date | date:'medium' }}</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <p>{{ alert.description }}</p>
+              </mat-card-content>
+              <mat-card-actions>
+                <button mat-button color="primary">VIEW DETAILS</button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

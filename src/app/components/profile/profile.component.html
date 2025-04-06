@@ -1,0 +1,72 @@
+<!-- src/app/components/profile/profile.component.html -->
+<div class="profile-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-icon mat-card-avatar>account_circle</mat-icon>
+      <mat-card-title>Business Profile</mat-card-title>
+      <mat-card-subtitle>Manage your business information</mat-card-subtitle>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" type="email" placeholder="Your email">
+            <mat-error *ngIf="profileForm.get('email')?.hasError('required')">Email is required</mat-error>
+            <mat-error *ngIf="profileForm.get('email')?.hasError('email')">Please enter a valid email</mat-error>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline">
+            <mat-label>Business Name</mat-label>
+            <input matInput formControlName="businessName" placeholder="Your business name">
+            <mat-error *ngIf="profileForm.get('businessName')?.hasError('required')">Business name is required</mat-error>
+          </mat-form-field>
+        </div>
+        
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Phone Number</mat-label>
+            <input matInput formControlName="phoneNumber" placeholder="Business phone number">
+            <mat-error *ngIf="profileForm.get('phoneNumber')?.hasError('required')">Phone number is required</mat-error>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline">
+            <mat-label>Business Registration ID</mat-label>
+            <input matInput formControlName="businessRegId" placeholder="Registration ID">
+            <mat-error *ngIf="profileForm.get('businessRegId')?.hasError('required')">Business registration ID is required</mat-error>
+          </mat-form-field>
+        </div>
+        
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>LinkedIn Profile</mat-label>
+          <input matInput formControlName="linkedInProfile" placeholder="LinkedIn profile URL">
+        </mat-form-field>
+        
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Google Business ID</mat-label>
+            <input matInput formControlName="googleBusinessId" placeholder="Google Business ID">
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline">
+            <mat-label>Sales Tax Certificate</mat-label>
+            <input matInput formControlName="salesTaxCertificate" placeholder="Sales tax certificate number">
+          </mat-form-field>
+        </div>
+        
+        <div class="form-actions">
+          <button mat-raised-button color="primary" type="submit" [disabled]="profileForm.invalid || loading">
+            <mat-icon>save</mat-icon> Save Changes
+          </button>
+          <mat-spinner *ngIf="loading" diameter="24"></mat-spinner>
+        </div>
+        
+        <mat-card *ngIf="success" class="success-message">
+          <mat-icon>check_circle</mat-icon>
+          Profile updated successfully
+        </mat-card>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
